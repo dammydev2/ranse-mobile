@@ -40,7 +40,7 @@ const PhoneNumberScreen = props => {
     }
     formBody = formBody.join('&');
 
-    fetch('http://192.168.0.197:8000/api/get_number', {
+    fetch('http://192.168.43.190:8000/api/get_number', {
       method: 'POST',
       body: formBody,
       headers: {
@@ -53,10 +53,10 @@ const PhoneNumberScreen = props => {
         setLoading(false);
         console.log(responseJson);
         // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
-          console.log(responseJson.data[0].user_id);
-          props.navigation.navigate('DrawerNavigationRoutes');
+        if (responseJson.status == 200) {
+          // AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
+          // console.log(responseJson.data[0].user_id);
+          props.navigation.navigate('ConfirmCodeScreen', {phone: userPhone});
         } else {
           setErrortext(responseJson.error);
           console.log(responseJson.error);

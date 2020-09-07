@@ -21,7 +21,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/loader';
 
 const ConfirmCodeScreen = props => {
-  let [userPhone, setUserPhone] = useState('');
+  // let [userPhone, setUserPhone] = this.props.navigation.getParam('phone');
   let [code, setCode] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
@@ -42,7 +42,7 @@ const ConfirmCodeScreen = props => {
     }
     formBody = formBody.join('&');
 
-    fetch('http://192.168.0.197:8000/api/get_number', {
+    fetch('http://192.168.43.190:8000/api/get_number', {
       method: 'POST',
       body: formBody,
       headers: {

@@ -145,6 +145,11 @@ const LoginScreen = props => {
               onPress={() => props.navigation.navigate('PhoneNumberScreen')}>
               Phone Screen
             </Text>
+            <Text
+              style={styles.registerTextStyle}
+              onPress={() => props.navigation.navigate('ConfirmCodeScreen')}>
+              confirm Screen
+            </Text>
           </KeyboardAvoidingView>
         </View>
       </ScrollView>

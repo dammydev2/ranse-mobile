@@ -3,6 +3,7 @@
 
 //Import React and Hook we needed
 import React, { useState } from 'react';
+import CountDown from 'react-native-countdown-component';
 
 //Import all required component
 import {
@@ -19,19 +20,20 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/loader';
 
-const PhoneNumberScreen = props => {
+const ConfirmCodeScreen = props => {
   let [userPhone, setUserPhone] = useState('');
+  let [code, setCode] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
 
   const handleSubmitPress = () => {
     setErrortext('');
-    if (!userPhone) {
-      alert('Please fill Phone Number');
+    if (!code) {
+      alert('Please Enter Code');
       return;
     }
     setLoading(true);
-    var dataToSend = { phone: userPhone };
+    var dataToSend = { phone: userPhone, code: code };
     var formBody = [];
     for (var key in dataToSend) {
       var encodedKey = encodeURIComponent(key);
@@ -56,7 +58,7 @@ const PhoneNumberScreen = props => {
         if (responseJson.status == 1) {
           AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
           console.log(responseJson.data[0].user_id);
-          props.navigation.navigate('DrawerNavigationRoutes');
+          props.navigation.navigate('RegisterScreen');
         } else {
           setErrortext(responseJson.error);
           console.log(responseJson.error);
@@ -87,20 +89,30 @@ const PhoneNumberScreen = props => {
               />
             </View>
             <View>
+            <CountDown
+        until={60 * 10 + 30}
+        size={20}
+        onFinish={() => alert('Finished')}
+        digitStyle={{backgroundColor: '#FFF'}}
+        digitTxtStyle={{color: '#1CC625'}}
+        timeToShow={['M', 'S']}
+        timeLabels={{m: 'MM', s: 'SS'}}
+      />
+            </View>
+            <View>
             <Text style={styles.frontTextStyle}>
-                Enter your 11 digit phone number and press continue to
-                recieve a confirmation code via text or whatsapp
+                Enter the code you recieve via sms or whatsapp here
               </Text>
             </View>
             <View style={styles.SectionStyle}> 
               <TextInput
                 style={styles.inputStyle}
-                onChangeText={UserPhone => setUserPhone(UserPhone)}
+                onChangeText={code => setCode(code)}
                 underlineColorAndroid="#FFFFFF"
-                placeholder="Enter Phone Number" //dummy@abc.com
+                placeholder="Enter Code" //dummy@abc.com
                 placeholderTextColor="#F6F6F7"
                 autoCapitalize="none"
-                keyboardType="phone-pad"
+                keyboardType="numeric"
                 // ref={ref => {
                 //   this._emailinput = ref;
                 // }}
@@ -118,20 +130,15 @@ const PhoneNumberScreen = props => {
               style={styles.buttonStyle}
               activeOpacity={0.5}
               onPress={handleSubmitPress}>
-              <Text style={styles.buttonTextStyle}>Continue</Text>
+              <Text style={styles.buttonTextStyle}>Confirm</Text>
             </TouchableOpacity>
-            <Text
-              style={styles.registerTextStyle}
-              onPress={() => props.navigation.navigate('LoginScreen')}>
-              Already a registered user, login here
-            </Text>
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
     </View>
   );
 };
-export default PhoneNumberScreen;
+export default ConfirmCodeScreen;
 
 const styles = StyleSheet.create({
   mainBody: {

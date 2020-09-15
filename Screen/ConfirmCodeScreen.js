@@ -21,19 +21,17 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/loader';
 
 const ConfirmCodeScreen = props => {
-  // let [userPhone, setUserPhone] = this.props.navigation.getParam('phone');
+  //  const {userPhone} = props.navigation.getParam('phone', 'no data');
   let [code, setCode] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
 
-  const handleSubmitPress = () => {
-    setErrortext('');
-    if (!code) {
-      alert('Please Enter Code');
-      return;
-    }
+  var phone = props.navigation.getParam('phone', 'no data');
+
+  // resending code
+  const handleResendPress = () => {
     setLoading(true);
-    var dataToSend = { phone: userPhone, code: code };
+    var dataToSend = { phone: phone };
     var formBody = [];
     for (var key in dataToSend) {
       var encodedKey = encodeURIComponent(key);
@@ -43,6 +41,51 @@ const ConfirmCodeScreen = props => {
     formBody = formBody.join('&');
 
     fetch('http://192.168.43.190:8000/api/get_number', {
+      method: 'POST',
+      body: formBody,
+      headers: {
+        //Header Defination
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+      },
+    }).then(response => response.json())
+      .then(responseJson => {
+        //Hide Loader
+        setLoading(false);
+        console.log(responseJson);
+        // If server response message same as Data Matched
+        if (responseJson.status == 200) {
+          // AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
+          // console.log(responseJson.data[0].user_id);
+          props.navigation.navigate('ConfirmCodeScreen', { phone: userPhone });
+        } else {
+          setErrortext(responseJson.error);
+          console.log(responseJson.error);
+        }
+      })
+      .catch(error => {
+        //Hide Loader
+        setLoading(false);
+        console.error(error);
+      });
+  }
+
+  const handleSubmitPress = () => {
+    setErrortext('');
+    if (!code) {
+      alert('Please Enter Code');
+      return;
+    }
+    setLoading(true);
+    var dataToSend = { phone: phone, code: code };
+    var formBody = [];
+    for (var key in dataToSend) {
+      var encodedKey = encodeURIComponent(key);
+      var encodedValue = encodeURIComponent(dataToSend[key]);
+      formBody.push(encodedKey + '=' + encodedValue);
+    }
+    formBody = formBody.join('&');
+
+    fetch('http://192.168.43.190:8000/api/check_number', {
       method: 'POST',
       body: formBody,
       headers: {
@@ -71,11 +114,13 @@ const ConfirmCodeScreen = props => {
       });
   };
 
+  
+
   return (
     <View style={styles.mainBody}>
       <Loader loading={loading} />
       <ScrollView keyboardShouldPersistTaps="handled">
-        <View style={{ marginTop: 100 }}>
+        <View style={{ marginTop: 20 }}>
           <KeyboardAvoidingView enabled>
             <View style={{ alignItems: 'center' }}>
               <Image
@@ -89,22 +134,23 @@ const ConfirmCodeScreen = props => {
               />
             </View>
             <View>
-            <CountDown
-        until={60 * 10 + 30}
-        size={20}
-        onFinish={() => alert('Finished')}
-        digitStyle={{backgroundColor: '#FFF'}}
-        digitTxtStyle={{color: '#1CC625'}}
-        timeToShow={['M', 'S']}
-        timeLabels={{m: 'MM', s: 'SS'}}
-      />
+              {/* <CountDown
+                until={60 * 3 + 30}
+                size={10}
+                onFinish={() => alert('Finished')}
+                digitStyle={{ backgroundColor: '#FFF' }}
+                digitTxtStyle={{ color: '#1CC625' }}
+                timeToShow={['M', 'S']}
+                timeLabels={{ m: 'MM', s: 'SS' }}
+              /> */}
             </View>
             <View>
-            <Text style={styles.frontTextStyle}>
+              <Text>{phone}</Text>
+              <Text style={styles.frontTextStyle}>
                 Enter the code you recieve via sms or whatsapp here
               </Text>
             </View>
-            <View style={styles.SectionStyle}> 
+            <View style={styles.SectionStyle}>
               <TextInput
                 style={styles.inputStyle}
                 onChangeText={code => setCode(code)}
@@ -133,6 +179,14 @@ const ConfirmCodeScreen = props => {
               <Text style={styles.buttonTextStyle}>Confirm</Text>
             </TouchableOpacity>
           </KeyboardAvoidingView>
+        </View>
+        <View>
+          <TouchableOpacity
+            style={styles.resendStyle}
+            activeOpacity={0.5}
+            onPress={handleResendPress}>
+            <Text style={styles.buttonTextStyle}>Did not recieve a code: Resend</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -199,5 +253,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
     padding: 10,
-  }
+  },
+  resendStyle: {
+    marginLeft: 60,
+  },
 });

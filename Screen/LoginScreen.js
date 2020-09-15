@@ -3,6 +3,7 @@
 
 //Import React and Hook we needed
 import React, { useState } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 //Import all required component
 import {
@@ -76,26 +77,37 @@ const LoginScreen = props => {
 
   return (
     <View style={styles.mainBody}>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+        <Image
+          source={require('../Image/splash.png')}
+          style={{
+            width: '20%',
+            height: 50,
+            resizeMode: 'contain',
+            margin: 30,
+          }}
+        />
+      </View>
       <Loader loading={loading} />
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={{ marginTop: 100 }}>
           <KeyboardAvoidingView enabled>
-            <View style={{ alignItems: 'center' }}>
-              <Image
-                source={require('../Image/aboutreact.png')}
-                style={{
-                  width: '50%',
-                  height: 100,
-                  resizeMode: 'contain',
-                  margin: 30,
-                }}
-              />
+            <View style={styles.WelcomeViewStyle}>
+              <Text style={styles.WelcomeStyle}>
+                Welcome !
+                </Text>
             </View>
             <View style={styles.SectionStyle}>
+              <Icon
+                style={styles.iconStyle}
+                name='user'
+                type='font-awesome'
+                size={26}
+              />
               <TextInput
                 style={styles.inputStyle}
                 onChangeText={UserEmail => setUserEmail(UserEmail)}
-                underlineColorAndroid="#FFFFFF"
+                // underlineColorAndroid="#FFFFFF"
                 placeholder="Enter Email" //dummy@abc.com
                 placeholderTextColor="#F6F6F7"
                 autoCapitalize="none"
@@ -111,10 +123,16 @@ const LoginScreen = props => {
               />
             </View>
             <View style={styles.SectionStyle}>
+              <Icon
+                style={styles.iconStyle}
+                name='lock'
+                type='font-awesome'
+                size={26}
+              />
               <TextInput
                 style={styles.inputStyle}
                 onChangeText={UserPassword => setUserPassword(UserPassword)}
-                underlineColorAndroid="#FFFFFF"
+                // underlineColorAndroid="#FFFFFF"
                 placeholder="Enter Password" //12345
                 placeholderTextColor="#F6F6F7"
                 keyboardType="default"
@@ -140,19 +158,22 @@ const LoginScreen = props => {
               onPress={() => props.navigation.navigate('RegisterScreen')}>
               New Here ? Register
             </Text>
-            <Text
+            {/* <Text
               style={styles.registerTextStyle}
               onPress={() => props.navigation.navigate('PhoneNumberScreen')}>
               Phone Screen
             </Text>
             <Text
               style={styles.registerTextStyle}
-              onPress={() => props.navigation.navigate('ConfirmCodeScreen')}>
+              onPress={() => props.navigation.navigate('ConfirmCodeScreen', { phone: '090' })}>
               confirm Screen
-            </Text>
+            </Text> */}
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
+      <View style={{ flex: 1, flexDirection: 'column' }}>
+        <View style={styles.belowBox} />
+      </View>
     </View>
   );
 };
@@ -162,7 +183,7 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#307ecc',
+    backgroundColor: '#800199',
   },
   SectionStyle: {
     flexDirection: 'row',
@@ -173,20 +194,19 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: '#7DE24E',
+    backgroundColor: '#FFFFFF',
     borderWidth: 0,
-    color: '#FFFFFF',
+    color: '#800199',
     borderColor: '#7DE24E',
     height: 40,
     alignItems: 'center',
-    borderRadius: 30,
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
     marginBottom: 20,
   },
   buttonTextStyle: {
-    color: '#FFFFFF',
+    color: '#800199',
     paddingVertical: 10,
     fontSize: 16,
   },
@@ -195,9 +215,10 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingLeft: 15,
     paddingRight: 15,
-    borderWidth: 1,
-    borderRadius: 30,
-    borderColor: 'white',
+    borderWidth: 3,
+    // borderRadius: 30,
+    borderColor: '#800199',
+    borderBottomColor: 'white',
   },
   registerTextStyle: {
     color: '#FFFFFF',
@@ -210,4 +231,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
   },
+  WelcomeStyle: {
+    fontSize: 40,
+    color: '#ffffff',
+    fontWeight: 'bold'
+  },
+  WelcomeViewStyle: {
+    marginLeft: 30,
+  },
+  belowBox: {
+    height: 100,
+    width: 100,
+    backgroundColor: '#ffffff',
+    borderTopRightRadius: 150,
+    marginTop: 10
+  },
+  iconStyle: {
+    color: '#FFFFFF',
+    marginTop: 10,
+    // marginLeft: 10
+  }
 });

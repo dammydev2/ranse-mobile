@@ -5,10 +5,21 @@
 import React from 'react';
 
 //Import all required component
+import  { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import 'react-native-gesture-handler';
+
+
+
 
 const CustomSidebarMenu = props => {
+  let [first_name, setFirstName] = useState('');
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    getName()
+  });
   let items = [
     {
       navOptionName: 'Home Screen',
@@ -23,6 +34,22 @@ const CustomSidebarMenu = props => {
       screenToNavigate: 'logout',
     },
   ];
+
+  // AsyncStorage.getItem('first_name')
+  // .then( first_name => console.log(first_name) );
+  const getName = async () => {
+    try {
+      const first_name = await AsyncStorage.getItem('first_name')
+      if(first_name !== null) {
+        setFirstName(first_name)
+        // value previously stored
+      }
+    } catch(e) {
+      // error reading value
+    }
+  }
+ 
+  
 
   const handleClick = (index, screenToNavigate) => {
     if (screenToNavigate == 'logout') {
@@ -62,7 +89,7 @@ const CustomSidebarMenu = props => {
             {'About React'.charAt(0)}
           </Text>
         </View>
-        <Text style={stylesSidebar.profileHeaderText}>AboutReact</Text>
+        <Text style={stylesSidebar.profileHeaderText}>{ first_name }</Text>
       </View>
       <View style={stylesSidebar.profileHeaderLine} />
       <View style={{ width: '100%', flex: 1 }}>
@@ -75,8 +102,8 @@ const CustomSidebarMenu = props => {
               color: 'white',
               backgroundColor:
                 global.currentScreenIndex === item.screenToNavigate
-                  ? '#4b9ff2'
-                  : '#307ecc',
+                  ? '#800181'
+                  : '#800199',
             }}
             key={key}
             onStartShouldSetResponder={() =>
@@ -96,13 +123,13 @@ const stylesSidebar = StyleSheet.create({
   sideMenuContainer: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#307ecc',
+    backgroundColor: '#800199',
     paddingTop: 40,
     color: 'white',
   },
   profileHeader: {
     flexDirection: 'row',
-    backgroundColor: '#307ecc',
+    backgroundColor: '#800181',
     padding: 15,
     textAlign: 'center',
   },

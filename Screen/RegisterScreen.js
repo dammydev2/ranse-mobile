@@ -3,6 +3,8 @@
 
 //Import React and Hook we needed
 import React, { useState } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-community/async-storage';
 
 //Import all required component
 import {
@@ -19,39 +21,55 @@ import {
 import Loader from './Components/loader';
 
 const RegisterScreen = props => {
-  let [userName, setUserName] = useState('');
+  let [firstName, setFirstName] = useState('');
+  let [lastName, setLastName] = useState('');
   let [userEmail, setUserEmail] = useState('');
-  let [userAge, setUserAge] = useState('');
-  let [userAddress, setUserAddress] = useState('');
+  let [UserPassword, setUserPassword] = useState('');
+  let [ConfirmPassword, setConfirmPassword] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
+  let [emailError, setEmailError] = useState('');
+  let [passwordError, setpasswordError] = useState('');
   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
+
+  var phone = props.navigation.getParam('phone', 'no data');
 
   const handleSubmitButton = () => {
     setErrortext('');
-    if (!userName) {
-      alert('Please fill Name');
+    if (!firstName) {
+      alert('Please first Name');
+      return;
+    }
+    if (!lastName) {
+      alert('Please last Name');
       return;
     }
     if (!userEmail) {
       alert('Please fill Email');
       return;
     }
-    if (!userAge) {
-      alert('Please fill Age');
+    if (!UserPassword) {
+      alert('Please fill Password');
       return;
     }
-    if (!userAddress) {
-      alert('Please fill Address');
+    if (!ConfirmPassword) {
+      alert('Please fill confirm Password');
+      return;
+    }
+    if (UserPassword !== ConfirmPassword) {
+      alert('password and confirm password are not the same');
       return;
     }
     //Show Loader
     setLoading(true);
     var dataToSend = {
-      user_name: userName,
-      user_email: userEmail,
-      user_age: userAge,
-      user_address: userAddress,
+      first_name: firstName,
+      last_name: lastName,
+      email: userEmail,
+      password: UserPassword,
+      password_confirmation: ConfirmPassword,
+      user_role: 'customer',
+      phone: phone,
     };
     var formBody = [];
     for (var key in dataToSend) {
@@ -61,7 +79,7 @@ const RegisterScreen = props => {
     }
     formBody = formBody.join('&');
 
-    fetch('https://aboutreact.herokuapp.com/register.php', {
+    fetch('http://192.168.0.196:8000/api/register', {
       method: 'POST',
       body: formBody,
       headers: {
@@ -75,11 +93,16 @@ const RegisterScreen = props => {
         setLoading(false);
         console.log(responseJson);
         // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          setIsRegistraionSuccess(true);
+        if (responseJson.status == 201) {
+          AsyncStorage.setItem('token', responseJson.token);
+          props.navigation.navigate('DrawerNavigationRoutes');
+          console.log(responseJson)
+          // setIsRegistraionSuccess(true);
           console.log('Registration Successful. Please Login to proceed');
         } else {
           setErrortext('Registration Unsuccessful');
+           setEmailError(responseJson.errors.email)
+           setpasswordError(responseJson.errors.password)
         }
       })
       .catch(error => {
@@ -93,7 +116,7 @@ const RegisterScreen = props => {
       <View
         style={{
           flex: 1,
-          backgroundColor: '#307ecc',
+          backgroundColor: '#800199',
           justifyContent: 'center',
         }}>
         <Image
@@ -111,27 +134,32 @@ const RegisterScreen = props => {
     );
   }
   return (
-    <View style={{ flex: 1, backgroundColor: '#307ecc' }}>
+    <View style={{ flex: 1, backgroundColor: '#800199' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+        <Image
+          source={require('../Image/splash.png')}
+          style={{
+            width: '20%',
+            height: 50,
+            resizeMode: 'contain',
+            margin: 10,
+          }}
+        />
+      </View>
       <Loader loading={loading} />
       <ScrollView keyboardShouldPersistTaps="handled">
-        <View style={{ alignItems: 'center' }}>
-          <Image
-            source={require('../Image/aboutreact.png')}
-            style={{
-              width: '50%',
-              height: 100,
-              resizeMode: 'contain',
-              margin: 30,
-            }}
-          />
-        </View>
         <KeyboardAvoidingView enabled>
           <View style={styles.SectionStyle}>
+          <Icon
+              style={styles.iconStyle}
+              name='user'
+              type='font-awesome'
+              size={26}
+            />
             <TextInput
               style={styles.inputStyle}
-              onChangeText={UserName => setUserName(UserName)}
-              underlineColorAndroid="#FFFFFF"
-              placeholder="Enter Name"
+              onChangeText={firstName => setFirstName(firstName)}
+              placeholder="Enter First Name"
               placeholderTextColor="#F6F6F7"
               autoCapitalize="sentences"
               returnKeyType="next"
@@ -142,65 +170,111 @@ const RegisterScreen = props => {
             />
           </View>
           <View style={styles.SectionStyle}>
-            <TextInput
-              style={styles.inputStyle}
-              onChangeText={UserEmail => setUserEmail(UserEmail)}
-              underlineColorAndroid="#F6F6F7"
-              placeholder="Enter Email"
-              placeholderTextColor="#F6F6F7"
-              keyboardType="email-address"
-              ref={ref => {
-                this._emailinput = ref;
-              }}
-              returnKeyType="next"
-              onSubmitEditing={() => this._ageinput && this._ageinput.focus()}
-              blurOnSubmit={false}
+          <Icon
+              style={styles.iconStyle}
+              name='user'
+              type='font-awesome'
+              size={26}
             />
-          </View>
-          <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={UserAge => setUserAge(UserAge)}
-              underlineColorAndroid="#F6F6F7"
-              placeholder="Enter Age"
+              onChangeText={lastName => setLastName(lastName)}
+              placeholder="Enter Last Name"
               placeholderTextColor="#F6F6F7"
-              keyboardType="numeric"
-              ref={ref => {
-                this._ageinput = ref;
-              }}
+              autoCapitalize="sentences"
+              returnKeyType="next"
               onSubmitEditing={() =>
-                this._addressinput && this._addressinput.focus()
+                this._emailinput && this._emailinput.focus()
               }
               blurOnSubmit={false}
             />
           </View>
           <View style={styles.SectionStyle}>
+          <Icon
+              style={styles.iconStyle}
+              name='envelope'
+              type='font-awesome'
+              size={22}
+            />
             <TextInput
               style={styles.inputStyle}
-              onChangeText={UserAddress => setUserAddress(UserAddress)}
-              underlineColorAndroid="#FFFFFF"
-              placeholder="Enter Address"
+              onChangeText={UserEmail => setUserEmail(UserEmail)}
+              placeholder="Enter Email"
               placeholderTextColor="#F6F6F7"
-              autoCapitalize="sentences"
-              ref={ref => {
-                this._addressinput = ref;
-              }}
+              keyboardType="email-address"
+              // ref={ref => {
+              //   this._emailinput = ref;
+              // }}
               returnKeyType="next"
-              onSubmitEditing={Keyboard.dismiss}
+              onSubmitEditing={() => this._ageinput && this._ageinput.focus()}
               blurOnSubmit={false}
             />
           </View>
           {errortext != '' ? (
-            <Text style={styles.errorTextStyle}> {errortext} </Text>
+            <Text style={styles.errorTextStyle}> {emailError} </Text>
           ) : null}
+
+          <View style={styles.SectionStyle}>
+            <Icon
+              style={styles.iconStyle}
+              name='lock'
+              type='font-awesome'
+              size={26}
+            />
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={UserPassword => setUserPassword(UserPassword)}
+              placeholder="Enter Password" //12345
+              placeholderTextColor="#F6F6F7"
+              keyboardType="default"
+              // ref={ref => {
+              //   this._passwordinput = ref;
+              // }}
+              onSubmitEditing={Keyboard.dismiss}
+              blurOnSubmit={false}
+              secureTextEntry={true}
+            />
+          </View>
+          {errortext != '' ? (
+            <Text style={styles.errorTextStyle}> {passwordError} </Text>
+          ) : null}
+
+          <View style={styles.SectionStyle}>
+            <Icon
+              style={styles.iconStyle}
+              name='lock'
+              type='font-awesome'
+              size={26}
+            />
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={ConfirmPassword => setConfirmPassword(ConfirmPassword)}
+              placeholder="Confirm Password" //12345
+              placeholderTextColor="#F6F6F7"
+              keyboardType="default"
+              // ref={ref => {
+              //   this._passwordinput = ref;
+              // }}
+              onSubmitEditing={Keyboard.dismiss}
+              blurOnSubmit={false}
+              secureTextEntry={true}
+            />
+          </View>
+
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
             onPress={handleSubmitButton}>
             <Text style={styles.buttonTextStyle}>REGISTER</Text>
           </TouchableOpacity>
+          {errortext != '' ? (
+            <Text style={styles.errorTextStyle}> {errortext} </Text>
+          ) : null}
         </KeyboardAvoidingView>
       </ScrollView>
+      <View style={{ flex: 1, flexDirection: 'column' }}>
+        <View style={styles.belowBox} />
+      </View>
     </View>
   );
 };
@@ -216,20 +290,19 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: '#7DE24E',
+    backgroundColor: '#FFFFFF',
     borderWidth: 0,
-    color: '#FFFFFF',
+    color: '#800199',
     borderColor: '#7DE24E',
     height: 40,
     alignItems: 'center',
-    borderRadius: 30,
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
     marginBottom: 20,
   },
   buttonTextStyle: {
-    color: '#FFFFFF',
+    color: '#800199',
     paddingVertical: 10,
     fontSize: 16,
   },
@@ -238,9 +311,10 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingLeft: 15,
     paddingRight: 15,
-    borderWidth: 1,
-    borderRadius: 30,
-    borderColor: 'white',
+    borderWidth: 3,
+    // borderRadius: 30,
+    borderColor: '#800199',
+    borderBottomColor: 'white',
   },
   errorTextStyle: {
     color: 'red',
@@ -253,4 +327,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     padding: 30,
   },
+  belowBox: {
+    height: 100,
+    width: 100,
+    backgroundColor: '#ffffff',
+    borderTopRightRadius: 150,
+    marginTop: -30
+  },
+  iconStyle: {
+    color: '#FFFFFF',
+    marginTop: 10,
+    // marginLeft: 10
+  }
 });

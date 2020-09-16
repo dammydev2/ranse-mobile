@@ -16,6 +16,7 @@ import {
   Keyboard,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/loader';
@@ -46,7 +47,7 @@ const LoginScreen = props => {
     }
     formBody = formBody.join('&');
 
-    fetch('http://192.168.0.164:8000/api/login', {
+    fetch('http://192.168.0.196:8000/api/login', {
       method: 'POST',
       body: formBody,
       headers: {
@@ -57,11 +58,12 @@ const LoginScreen = props => {
       .then(responseJson => {
         //Hide Loader
         setLoading(false);
-        console.log(responseJson);
+        // console.log(responseJson);
         // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
-          console.log(responseJson.data[0].user_id);
+        if (responseJson.status == 200) {
+          AsyncStorage.setItem('first_name', responseJson.first_name);
+          AsyncStorage.setItem('token', responseJson.token);
+          // console.log(responseJson.data[0].user_id);
           props.navigation.navigate('DrawerNavigationRoutes');
         } else {
           setErrortext('Please check your email id or password');
@@ -155,13 +157,13 @@ const LoginScreen = props => {
             </TouchableOpacity>
             <Text
               style={styles.registerTextStyle}
-              onPress={() => props.navigation.navigate('RegisterScreen')}>
+              onPress={() => props.navigation.navigate('PhoneNumberScreen')}>
               New Here ? Register
             </Text>
             {/* <Text
               style={styles.registerTextStyle}
-              onPress={() => props.navigation.navigate('PhoneNumberScreen')}>
-              Phone Screen
+              onPress={() => props.navigation.navigate('RegisterScreen', { phone: '090' })}>
+              register page
             </Text>
             <Text
               style={styles.registerTextStyle}
@@ -244,7 +246,7 @@ const styles = StyleSheet.create({
     width: 100,
     backgroundColor: '#ffffff',
     borderTopRightRadius: 150,
-    marginTop: 10
+    marginTop: 40
   },
   iconStyle: {
     color: '#FFFFFF',

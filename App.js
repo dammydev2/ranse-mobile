@@ -29,7 +29,7 @@ const Auth = createStackNavigator({
     navigationOptions: {
       title: 'Register',
       headerStyle: {
-        backgroundColor: '#307ecc',
+        backgroundColor: '#800181',
       },
       headerTintColor: '#fff',
     },
@@ -39,7 +39,7 @@ const Auth = createStackNavigator({
     navigationOptions: {
       title: 'phone',
       headerStyle: {
-        backgroundColor: '#307ecc',
+        backgroundColor: '#800181',
       },
       headerTintColor: '#fff',
     },
@@ -49,7 +49,7 @@ const Auth = createStackNavigator({
     navigationOptions: {
       title: 'Confirm code',
       headerStyle: {
-        backgroundColor: '#307ecc',
+        backgroundColor: '#800181',
       },
       headerTintColor: '#fff',
     },

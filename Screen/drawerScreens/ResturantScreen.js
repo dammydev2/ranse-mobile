@@ -3,7 +3,6 @@
 
 //Import React
 import React from 'react';
-import { createStackNavigator } from 'react-navigation-stack';
 
 //Import all required component
 import {
@@ -17,17 +16,15 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ActivityIndicator,
-  Button,
 } from 'react-native';
 
-
-const HomeScreen = (props) => {
+const ResturantScreen = props => {
   global.currentScreenIndex = 'HomeScreen';
   return (
     <View style={{ flex: 1, flexDirection: 'column', padding: 20, marginTop: 10 }}>
 
-      <TouchableOpacity
-      onPress={ () => props.navigation.navigate('ResturantScreen')}>
+      {/* <TouchableOpacity
+      onPress={ () => props.navigation.navigate('PhoneNumberScreen')}>
         <View style={styles.viewBox}>
           <View style={styles.content}>
             <Image
@@ -63,7 +60,7 @@ const HomeScreen = (props) => {
             <Text style={styles.belowText}>Cakes, Bread, Pies and confectioneries near you</Text>
           </View>
         </View>
-      </View>
+      </View> */}
 
       {/* <Text style={{ fontSize: 23, marginTop: 10 }}>Home Screen</Text>
       <Text style={{ fontSize: 18, marginTop: 10 }}>
@@ -73,7 +70,7 @@ const HomeScreen = (props) => {
     </View>
   );
 };
-export default HomeScreen;
+export default ResturantScreen;
 
 const styles = StyleSheet.create({
   viewBox: {

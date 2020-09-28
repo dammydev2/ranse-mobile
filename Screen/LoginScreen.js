@@ -47,7 +47,7 @@ const LoginScreen = props => {
     }
     formBody = formBody.join('&');
 
-    fetch('http://192.168.0.196:8000/api/login', {
+    fetch('http://192.168.0.198:8000/api/login', {
       method: 'POST',
       body: formBody,
       headers: {
@@ -159,6 +159,11 @@ const LoginScreen = props => {
               style={styles.registerTextStyle}
               onPress={() => props.navigation.navigate('PhoneNumberScreen')}>
               New Here ? Register
+            </Text>
+            <Text
+              style={styles.registerTextStyle}
+              onPress={() => props.navigation.navigate('TryScreen', { phone: '090' })}>
+              Try Screen
             </Text>
             {/* <Text
               style={styles.registerTextStyle}

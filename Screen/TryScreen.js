@@ -24,12 +24,16 @@ import {
 const TryScreen = props => {
   let [token, setFirstName] = useState('');
   let [resturants, setResturants] = useState([]);
-  let [url, setURL] = useState('');
   let [loading, setLoading] = useState(false);
-  // var type = props.navigation.getParam('type', 'no data');
+  var type = props.navigation.getParam('type', 'no data');
+
+
+  
+
+  
 
       useEffect(() => {
-        fetch('http://192.168.0.198:8000/api/user/tryapi', {
+        fetch('http://192.168.1.158:8000/api/user/tryapi', {
       method: 'GET',
       // body: formBody,
       headers: {
@@ -39,11 +43,9 @@ const TryScreen = props => {
     }).then(response => response.json())
       .then(responseJson => {
         resturants = responseJson.resturants
-        url = responseJson.url
-        // console.log(resturants)
+        console.log(resturants)
         setLoading(false);
         setResturants(resturants)
-        setURL(url)
       })
       .catch(error => {
         //Hide Loader
@@ -85,35 +87,7 @@ const TryScreen = props => {
           data={resturants}
           keyExtractor={({ id }, index) => id}
           renderItem={({ item }) => (
-            <View>
-            {/* <Text>{item.location}, {item.name}</Text> */}
-            <TouchableOpacity
-            // onPress= {console.log('press')}
-            >
-              <View style={styles.resturantBox}>
-                <View style={styles.content}>
-                  <Image
-                    // source={require('../../Image/food.jpeg')}
-                    source={{ uri: url + item.image }}
-                    style={{
-                      width: '60%',
-                      height: 160,
-                      // width: 100,
-                      resizeMode: 'contain',
-                      marginTop: -20
-                    }}
-                  />
-                </View>
-                <View style={styles.innerContent}>
-                  <Text style={styles.mainText}>{item.name} </Text>
-                  <Text style={styles.addressText}>{item.name}</Text>
-                  <Text style={styles.descriptionText}>{item.description}</Text>
-                  {/* <Text style={styles.descriptionText}>{url+item.image}</Text>
-                {console.log(url+item.image)} */}
-                </View>
-              </View>
-            </TouchableOpacity>
-          </View>
+            <Text>{item.address}, {item.name}</Text>
           )}
         />
 

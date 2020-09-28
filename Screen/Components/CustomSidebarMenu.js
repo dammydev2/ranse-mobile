@@ -10,9 +10,6 @@ import { View, StyleSheet, Text, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import 'react-native-gesture-handler';
 
-
-
-
 const CustomSidebarMenu = props => {
   let [first_name, setFirstName] = useState('');
 
@@ -48,8 +45,6 @@ const CustomSidebarMenu = props => {
       // error reading value
     }
   }
- 
-  
 
   const handleClick = (index, screenToNavigate) => {
     if (screenToNavigate == 'logout') {

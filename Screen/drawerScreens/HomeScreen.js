@@ -2,8 +2,9 @@
 /* https://aboutreact.com/react-native-login-and-signup/ */
 
 //Import React
-import React from 'react';
+import React, {Component} from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
+import { DrawerNavigator } from 'react-navigation';
 
 //Import all required component
 import {
@@ -19,15 +20,19 @@ import {
   ActivityIndicator,
   Button,
 } from 'react-native';
+// import ResturantScreen from './ResturantScreen';
+
+// import StackScreen from './../StackRoutes';
 
 
-const HomeScreen = (props) => {
+const HomeScreen = ({ navigation }) => {
+  // <StackScreen />
   global.currentScreenIndex = 'HomeScreen';
   return (
     <View style={{ flex: 1, flexDirection: 'column', padding: 20, marginTop: 10 }}>
 
       <TouchableOpacity
-      onPress={ () => props.navigation.navigate('ResturantScreen')}>
+      onPress={ () => navigation.navigate('ResturantScreen', { type: 'resturant' })}>
         <View style={styles.viewBox}>
           <View style={styles.content}>
             <Image
@@ -73,6 +78,7 @@ const HomeScreen = (props) => {
     </View>
   );
 };
+
 export default HomeScreen;
 
 const styles = StyleSheet.create({

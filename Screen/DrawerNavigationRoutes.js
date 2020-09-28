@@ -12,6 +12,7 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 //Import External Screens
 import HomeScreen from './drawerScreens/HomeScreen';
 import SettingsScreen from './drawerScreens/SettingsScreen';
+import Resturant from './drawerScreens/ResturantScreen';
 import CustomSidebarMenu from './Components/CustomSidebarMenu';
 import NavigationDrawerHeader from './Components/NavigationDrawerHeader';
 
@@ -20,6 +21,17 @@ const FirstActivity_StackNavigator = createStackNavigator({
     screen: HomeScreen,
     navigationOptions: ({ navigation }) => ({
       title: 'Home Screen',
+      headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
+      headerStyle: {
+        backgroundColor: '#800199',
+      },
+      headerTintColor: '#fff',
+    }),
+  },
+  ResturantScreen: {
+    screen: Resturant,
+    navigationOptions: ({ navigation }) => ({
+      title: 'Resturants',
       headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
       headerStyle: {
         backgroundColor: '#800199',

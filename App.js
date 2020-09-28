@@ -14,6 +14,7 @@ import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import PhoneNumberScreen from './Screen/PhoneNumberScreen';
 import ConfirmCodeScreen from './Screen/ConfirmCodeScreen';
+import TryScreen from './Screen/TryScreen';
 import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
 
 const Auth = createStackNavigator({
@@ -48,6 +49,16 @@ const Auth = createStackNavigator({
     screen: ConfirmCodeScreen,
     navigationOptions: {
       title: 'Confirm code',
+      headerStyle: {
+        backgroundColor: '#800181',
+      },
+      headerTintColor: '#fff',
+    },
+  },
+  TryScreen: {
+    screen: TryScreen,
+    navigationOptions: {
+      title: 'TryScreen',
       headerStyle: {
         backgroundColor: '#800181',
       },
